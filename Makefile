@@ -3,19 +3,22 @@ SHELL := /bin/bash
 OS        := $(shell uname -s)
 BREW      := $(shell command -v brew 2>/dev/null || echo "")
 
+NVM_VERSION := v0.40.3
+NVM_INSTALL := curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$(NVM_VERSION)/install.sh | bash
+
 # ---- packages (edit here only) ----
-COMMON_PKGS := fzf stow uv zoxide tree oh-my-posh wget
+COMMON_PKGS := fzf stow uv zoxide tree oh-my-posh wget neovim
 
 # Map per package manager if needed
 BREW_PKGS  := $(COMMON_PKGS)
-APT_PKGS   := fzf stow python3-pip zoxide
-DNF_PKGS   := fzf stow python3-pip zoxide
-BREW_CASKS := font-jetbrains-mono-nerd-font font-meslo-lg-nerd-font font-hack-nerd-font font-fira-code-nerd-font font-cascadia-code-nf
+APT_PKGS   := fzf stow python3-pip zoxide tree wget neovim
+DNF_PKGS   := fzf stow python3-pip zoxide tree wget neovim
+BREW_CASKS := font-jetbrains-mono-nerd-font font-meslo-lg-nerd-font font-hack-nerd-font font-fira-code-nerd-font font-cascadia-code-nerd-font
 
 # Which folders to stow
 STOW_DIRS ?= zsh ohmyposh ghostty
 
-.PHONY: all bootstrap check mac-bootstrap linux-bootstrap stow
+.PHONY: all bootstrap check mac-bootstrap linux-bootstrap stow nvm
 
 all: bootstrap stow
 
@@ -26,6 +29,7 @@ else
 	@$(MAKE) linux-bootstrap
 endif
 	@$(MAKE) check
+	@$(MAKE) nvm
 
 mac-bootstrap:
 	@echo "==> macOS detected"
@@ -43,6 +47,8 @@ mac-bootstrap:
 	@echo "==> Installing brew packages: $(BREW_PKGS)"
 	@brew install $(BREW_PKGS) || true
 
+	@echo "==> Tapping homebrew/cask-fonts"
+	@brew tap homebrew/cask-fonts || true
 	@echo "==> Installing brew casks: $(BREW_CASKS)"
 	@brew install --cask $(BREW_CASKS) || true
 
@@ -93,3 +99,12 @@ stow:
 	    echo "  - skip: $$dir (no such directory)"; \
 	  fi; \
 	done
+
+nvm:
+	@echo "==> Checking NVM"
+	@if [ ! -d "$$HOME/.nvm" ]; then \
+	  echo "==> Installing NVM $(NVM_VERSION)"; \
+	  $(NVM_INSTALL); \
+	else \
+	  echo "==> NVM already installed"; \
+	fi

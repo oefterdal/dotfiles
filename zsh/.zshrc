@@ -38,8 +38,6 @@ zinit cdreplay -q
 
 
 # Ohmyposh
-#eval "$(oh-my-posh init zsh --config ~/.config/ohmyposh/config.toml)"
-
 if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
 eval "$(oh-my-posh init zsh --config ~/.config/ohmyposh/config.toml)"
 fi
@@ -50,6 +48,8 @@ bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
 bindkey '^[w' kill-region
+bindkey "^P" up-line-or-beginning-search
+bindkey "^N" down-line-or-beginning-search
 
 # History
 HISTSIZE=5000

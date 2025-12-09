@@ -1,0 +1,24 @@
+# Colors
+cursor-color = f5e0dc
+background = 1e1d2f
+foreground = d9e0ee
+
+# Cursor
+cursor-style = block
+
+# Font
+font-family = JetBrainsMono Nerd Font
+font-size = 18
+font-style = regular
+font-style-bold = bold
+font-style-italic = italic
+
+# Shell
+command = /bin/zsh
+
+# Window
+window-decoration = auto
+window-padding-x = 4
+window-padding-y = 4
+
+

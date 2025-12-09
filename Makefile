@@ -12,7 +12,7 @@ APT_PKGS   := fzf stow python3-pip zoxide
 DNF_PKGS   := fzf stow python3-pip zoxide
 
 # Which folders to stow
-STOW_DIRS ?= zsh ohmyposh
+STOW_DIRS ?= zsh ohmyposh ghostty
 
 .PHONY: all bootstrap check mac-bootstrap linux-bootstrap stow
 

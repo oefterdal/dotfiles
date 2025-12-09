@@ -1,0 +1,84 @@
+{
+  "buffer_line_height": "comfortable",
+  "agent_ui_font_size": 16.0,
+  "buffer_font_family": "JetBrainsMono Nerd Font",
+  "ui_font_family": ".ZedMono",
+  "icon_theme": "Monospace Icon Theme - Dark",
+  "inlay_hints": {
+    "show_other_hints": false,
+    "show_parameter_hints": false,
+    "show_type_hints": false,
+    "show_value_hints": true
+  },
+  "ui_font_size": 16,
+  "buffer_font_size": 17.0,
+
+  "buffer_font_features": {
+    "calt": true
+  },
+  "lsp_document_colors": "border",
+  "wrap_guides": [80],
+  "show_edit_predictions": true,
+  "theme": {
+    "mode": "system",
+    "light": "Dracula Pro",
+    "dark": "Dracula Pro"
+  },
+  "autosave": {
+    "after_delay": { "milliseconds": 500 }
+  },
+  "format_on_save": "on",
+  "restore_on_startup": "last_session",
+  "show_completions_on_input": true,
+  "agent": {
+    "default_profile": "ask",
+    "play_sound_when_agent_done": true,
+    "inline_assistant_model": {
+      "provider": "zed.dev",
+      "model": "claude-sonnet-4-thinking"
+    },
+    "default_model": {
+      "provider": "ollama",
+      "model": "gpt-oss:20b"
+    }
+  },
+  "edit_predictions": {
+    "mode": "subtle",
+    "enabled_in_text_threads": false,
+    "copilot": {
+      "proxy": null,
+      "proxy_no_verify": null
+    }
+  },
+  "features": {
+    "edit_prediction_provider": "zed"
+  },
+  "context_servers": {
+    "mcp-server-context7": {
+      "enabled": true,
+      "settings": {
+        "context7_api_key": "ctx7sk-301483af-5fbc-4bd8-ace3-a381e6f175ef"
+      }
+    }
+  },
+  "git": {
+    "inline_blame": { "enabled": false }
+  },
+  "languages": {
+    "Python": {
+      "format_on_save": "on",
+      "language_servers": [
+        // Disable basedpyright and enable Ty, and otherwise
+        // use the default configuration.
+        "ty",
+        "!basedpyright",
+        "..."
+      ]
+    }
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "file_scan_exclusions": ["**/__pycache__"]
+}

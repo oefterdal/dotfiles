@@ -10,6 +10,7 @@ COMMON_PKGS := fzf stow uv zoxide tree oh-my-posh wget
 BREW_PKGS  := $(COMMON_PKGS)
 APT_PKGS   := fzf stow python3-pip zoxide
 DNF_PKGS   := fzf stow python3-pip zoxide
+BREW_CASKS := font-jetbrains-mono-nerd-font font-meslo-lg-nerd-font font-hack-nerd-font font-fira-code-nerd-font font-cascadia-code-nerd-font
 
 # Which folders to stow
 STOW_DIRS ?= zsh ohmyposh ghostty
@@ -41,6 +42,10 @@ mac-bootstrap:
 	fi
 	@echo "==> Installing brew packages: $(BREW_PKGS)"
 	@brew install $(BREW_PKGS) || true
+
+	@brew tap homebrew/cask-fonts || true
+	@echo "==> Installing brew casks: $(BREW_CASKS)"
+	@brew install --cask $(BREW_CASKS) || true
 
 linux-bootstrap:
 	@echo "==> Linux detected"

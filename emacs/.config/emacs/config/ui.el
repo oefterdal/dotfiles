@@ -1,5 +1,15 @@
 ;;; -*- lexical-binding: t -*-
 
+;; --------------------------------------------------
+;; Scrolling (reduce jumpiness)
+;; --------------------------------------------------
+(setq scroll-margin 5
+      scroll-conservatively 101
+      scroll-preserve-screen-position t)
+
+;; --------------------------------------------------
+;; Display optimizations
+;; --------------------------------------------------
 (defun my/setup-display-optimization ()
   (when (boundp 'redisplay-dont-pause)
     (setq redisplay-dont-pause t))
@@ -15,24 +25,27 @@
  (lambda ()
    (my/setup-display-optimization)
 
+   ;; Clean UI
    (menu-bar-mode -1)
    (tool-bar-mode -1)
    (scroll-bar-mode -1)
    (line-number-mode 1)
    (column-number-mode 1)
-
-   (setq display-buffer-alist
-         '(("\\*Help\\*" display-buffer-same-window)
-           ("\\*grep\\*" display-buffer-same-window)))
-
    (global-display-line-numbers-mode 1)
 
+   ;; Reuse same window for common buffers
+   (add-to-list 'display-buffer-alist '("\\*Help\\*" . (display-buffer-same-window)))
+   (add-to-list 'display-buffer-alist '("\\*grep\\*" . (display-buffer-same-window)))
+   (add-to-list 'display-buffer-alist '("\\*Warnings\\*" . (display-buffer-same-window)))
+   (add-to-list 'display-buffer-alist '("\\*Messages\\*" . (display-buffer-same-window)))
+
+   ;; Theme
    (setq custom-safe-themes t)
    (mapc #'disable-theme custom-enabled-themes)
-
-   (when (package-installed-p 'catppuccin-theme)
+   (when (locate-library "catppuccin-theme")
      (load-theme 'catppuccin t))
 
+   ;; No noise
    (setq ring-bell-function 'ignore)
    (setq visible-bell nil)))
 

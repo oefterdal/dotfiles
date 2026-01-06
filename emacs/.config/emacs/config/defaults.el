@@ -25,9 +25,23 @@
 (save-place-mode 1)
 (setq save-place-file (expand-file-name ".places" user-emacs-directory))
 
-;; Auto-revert
+;; Auto-refresh files and directories (Dired, logs, etc.)
 (global-auto-revert-mode 1)
+(setq auto-revert-use-notify t)
 
+;; Savehist
+(setq history-length 1000)
+(setq savehist-autosave-interval 300)
+
+;; Show matching parens 
+(show-paren-mode 1)
+(setq show-paren-delay 0)
+
+;; Projectil
+(require 'project)
+
+;; Always follow symlinks
+(setq vc-follow-symlinks t)
 (defun my/setup-startup-defaults ()
   "Apply basic startup defaults."
   (setq load-prefer-newer t)

@@ -78,6 +78,7 @@ alias ls='ls --color'
 alias vim='nvim'
 alias c='clear'
 alias ll='ls -l'
+alias emacs='emacs -nw'
 
 # Shell integrations
 eval "$(fzf --zsh)"

@@ -16,7 +16,7 @@ DNF_PKGS   := fzf stow python3-pip zoxide tree wget neovim
 BREW_CASKS := font-jetbrains-mono-nerd-font font-meslo-lg-nerd-font font-hack-nerd-font font-fira-code-nerd-font font-cascadia-code-nerd-font
 
 # Which folders to stow
-STOW_DIRS ?= zsh ohmyposh ghostty
+STOW_DIRS ?= zsh ohmyposh ghostty zed emacs
 
 .PHONY: all bootstrap check mac-bootstrap linux-bootstrap stow nvm
 

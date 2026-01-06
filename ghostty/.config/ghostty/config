@@ -21,4 +21,7 @@ window-decoration = auto
 window-padding-x = 4
 window-padding-y = 4
 
+theme = Catppuccin Mocha
 
+# Keys
+macos-option-as-alt = left

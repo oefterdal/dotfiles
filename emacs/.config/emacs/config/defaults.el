@@ -37,8 +37,20 @@
 (show-paren-mode 1)
 (setq show-paren-delay 0)
 
-;; Projectil
+;; Project
 (require 'project)
+
+;; Which key
+(setq which-key-idle-delay 0.3)
+
+;; Flycheck
+(with-eval-after-load 'flycheck
+  (add-to-list 'display-buffer-alist
+               '("\\*Flycheck errors\\*"
+                 (display-buffer-in-side-window)
+                 (side . bottom)
+                 (window-height . 0.25)
+                 (window-parameters . ((no-delete-other-windows . t))))))
 
 ;; Always follow symlinks
 (setq vc-follow-symlinks t)
@@ -62,6 +74,10 @@
     (setq comp-async-report-warnings-errors t)) ;; Show warnings/errors
 
   (message "⚡ Native compilation enabled"))
+
+;; Buffers
+(setq display-buffer-alist
+      '((".*" display-buffer-same-window)))
 
 ;; Apply performance settings
 (my/setup-startup-defaults)

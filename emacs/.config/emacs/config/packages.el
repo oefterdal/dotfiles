@@ -28,6 +28,32 @@
 (use-package vertico
   :init (vertico-mode 1))
 
+;; Better matching everywhere
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        ;; keep file completion sane
+        completion-category-overrides '((file (styles partial-completion)))))
+
+;; Rich annotations in minibuffer lists (M-x, find-file, etc.)
+(use-package marginalia
+  :init
+  (marginalia-mode 1))
+
+;; Context actions on minibuffer candidates + things at point
+(use-package embark
+  :bind (("C-." . embark-act)         ;; do something with current target/candidate
+         ("C-;" . embark-dwim)        ;; best default action
+         ("C-h B" . embark-bindings)) ;; show bindings for current target
+  :init
+  ;; Make Embark use completing-read UI (Vertico)
+  (setq prefix-help-command #'embark-prefix-help-command))
+
+;; Nice integration: export consult results to an Embark buffer, etc.
+(use-package embark-consult
+  :after (embark consult))
+
 (use-package savehist
   :init (savehist-mode 1))
 
@@ -63,6 +89,19 @@
   :bind (("C->"     . mc/mark-next-like-this)
          ("C-<"     . mc/mark-previous-like-this)
          ("C-c C->" . mc/mark-all-like-this)))
+
+;; Which key
+(use-package which-key
+  :config
+  (which-key-mode 1)
+  (setq which-key-idle-delay 0.3
+        which-key-side-window-location 'bottom))
+
+(use-package embark
+  :bind (("C-." . embark-act)))
+
+(use-package embark-consult
+  :after (embark consult))
 
 ;; --------------------------------------------------
 ;; UI

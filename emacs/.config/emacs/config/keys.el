@@ -2,9 +2,9 @@
 (require 'seq)
 
 (when (eq system-type 'darwin)
-  (setq mac-command-modifier 'super)
-  (setq mac-option-modifier nil)
-  (setq mac-right-option-modifier 'meta))
+  (setq mac-command-modifier 'meta)
+  (setq mac-option-modifier 'none)
+  (setq mac-right-option-modifier 'none))
 
 ;; Command palette
 (global-set-key (kbd "s-p") #'execute-extended-command)
@@ -44,31 +44,35 @@
 (global-set-key (kbd "s-S-i") #'my/format-buffer)
 
 (with-eval-after-load 'flycheck
-  (add-to-list 'display-buffer-alist
-               '("\\*Flycheck errors\\*"
-                 (display-buffer-in-side-window)
-                 (side . bottom)
-                 (window-height . 0.25)))
-
-  (add-hook 'flycheck-error-list-mode-hook (lambda () (company-mode -1)))
-
   (defun my/toggle-flycheck-panel ()
+    "Toggle Flycheck errors panel without stealing focus."
     (interactive)
-    (let* ((win (seq-find
-                 (lambda (w)
-                   (string-match-p "\\*Flycheck errors\\*" (buffer-name (window-buffer w))))
-                 (window-list)))
+    (let* ((buf (get-buffer "*Flycheck errors*"))
+           (win (and buf (get-buffer-window buf t)))
            (here (selected-window)))
       (if win
           (quit-window nil win)
         (flycheck-list-errors)
         (select-window here))))
 
-  (global-set-key (kbd "s-S-m") #'my/toggle-flycheck-panel)
-  (global-set-key (kbd "C-c ! l") #'my/toggle-flycheck-panel))
+  (global-set-key (kbd "C-c ! l") #'my/toggle-flycheck-panel)
+  (global-set-key (kbd "s-S-m")   #'my/toggle-flycheck-panel))
 
-(require 'project)
-(global-set-key (kbd "C-x p p") #'project-switch-project)
-(global-set-key (kbd "C-x p b") #'consult-project-buffer)
+(global-set-key (kbd "C-x p p") #'project-switch-project)  ; switch project
+(global-set-key (kbd "C-x p f") #'project-find-file)       ; find file
+(global-set-key (kbd "C-x p b") #'consult-project-buffer)  ; buffers in project
+(global-set-key (kbd "C-c p s") #'consult-ripgrep)         ; search (already)
+
+
+(with-eval-after-load 'which-key
+  (which-key-add-key-based-replacements
+    "C-c !" "diagnostics"
+    "C-c p" "project"
+    "C-c g" "git"
+    "C-c f" "files"
+    "C-c w" "windows"))
+
+;; Like RUN in Zed / VSCODE
+(global-set-key (kbd "C-c c") #'compile)
 
 (provide 'keys)

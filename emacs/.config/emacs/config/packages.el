@@ -1,11 +1,37 @@
 ;;; -*- lexical-binding: t -*-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Set up package tls ;;;;
+
 (require 'package)
 
+;; Don't auto-initialize.
 (setq package-enable-at-startup nil)
 
+;; Don't add that `custom-set-variables' block to init.
+(setq package--init-file-ensured t)
+
+;; From https://irreal.org/blog/?p=8243
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
+;; From https://github.com/hlissner/doom-emacs/blob/5dacbb7cb1c6ac246a9ccd15e6c4290def67757c/core/core-packages.el#L102
+(setq gnutls-verify-error (not (getenv "INSECURE")) ; you shouldn't use this
+      tls-checktrust gnutls-verify-error
+      tls-program (list "gnutls-cli --x509cafile %t -p %p %h"
+                        ;; compatibility fallbacks
+                        "gnutls-cli -p %p %h"
+                        "openssl s_client -connect %h:%p -no_ssl2 -no_ssl3 -ign_eof"))
+
 (setq package-archives
-      '(("gnu"   . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")))
+      '(("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+        ("gnu" . "https://elpa.gnu.org/packages/")))
+
+(setq package-archive-priorities
+      '(("melpa" .  4)
+        ("melpa-stable" . 3)
+        ("org" . 2)
+        ("gnu" . 1)))
 
 (unless package--initialized
   (package-initialize))
@@ -18,114 +44,40 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
+;; use-package-enable-imenu-support must be
+;; set before requiring use-package.
+(setq use-package-enable-imenu-support t)
+
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; --------------------------------------------------
-;; Completion & navigation
-;; --------------------------------------------------
+;; load path for package modules
+(defconst my/config-root
+  (expand-file-name "~/.config/emacs/"))
 
-(use-package vertico
-  :init (vertico-mode 1))
+(add-to-list 'load-path
+             (expand-file-name "packages" my/config-root))
 
-;; Better matching everywhere
-(use-package orderless
-  :init
-  (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        ;; keep file completion sane
-        completion-category-overrides '((file (styles partial-completion)))))
+(require 'pkg-ace-window)         ;;
+(require 'pkg-company)            ;;
+(require 'pkg-consult)            ;;
+(require 'pkg-embark)             ;;
+(require 'pkg-flycheck)           ;;
+(require 'pkg-lsp-mode)           ;;
+(require 'pkg-magit)              ;;
+(require 'pkg-marginalia)         ;;
+(require 'pkg-markdown)           ;;
+(require 'pkg-multiple-cursors)   ;;
+(require 'pkg-orderless)          ;;
+(require 'pkg-project)            ;;
+(require 'pkg-savehist)           ;;
+(require 'pkg-saveplace)          ;;
+(require 'pkg-ui)                 ;;
+(require 'pkg-vertico)            ;;
+(require 'pkg-which-key)          ;;
+(require 'pkg-windmove)           ;;
+(require 'pkg-dired)              ;;
+(require 'pkg-yasnippet)          ;;
 
-;; Rich annotations in minibuffer lists (M-x, find-file, etc.)
-(use-package marginalia
-  :init
-  (marginalia-mode 1))
-
-;; Context actions on minibuffer candidates + things at point
-(use-package embark
-  :bind (("C-." . embark-act)         ;; do something with current target/candidate
-         ("C-;" . embark-dwim)        ;; best default action
-         ("C-h B" . embark-bindings)) ;; show bindings for current target
-  :init
-  ;; Make Embark use completing-read UI (Vertico)
-  (setq prefix-help-command #'embark-prefix-help-command))
-
-;; Nice integration: export consult results to an Embark buffer, etc.
-(use-package embark-consult
-  :after (embark consult))
-
-(use-package savehist
-  :init (savehist-mode 1))
-
-(use-package consult
-  :defer t)
-
-;; --------------------------------------------------
-;; Utilities
-;; --------------------------------------------------
-
-(use-package magit :defer t)
-
-(use-package ace-window :defer t)
-
-(use-package company
-  :hook (after-init . global-company-mode))
-
-(use-package flycheck
-  :hook (after-init . global-flycheck-mode))
-
-(use-package lsp-mode
-  :commands (lsp lsp-deferred))
-
-(use-package org-roam
-  :after org)
-
-(use-package treemacs :defer t)
-
-(use-package catppuccin-theme :defer t)
-
-;; Multiple cursors
-(use-package multiple-cursors
-  :bind (("C->"     . mc/mark-next-like-this)
-         ("C-<"     . mc/mark-previous-like-this)
-         ("C-c C->" . mc/mark-all-like-this)))
-
-;; Which key
-(use-package which-key
-  :config
-  (which-key-mode 1)
-  (setq which-key-idle-delay 0.3
-        which-key-side-window-location 'bottom))
-
-(use-package embark
-  :bind (("C-." . embark-act)))
-
-(use-package embark-consult
-  :after (embark consult))
-
-;; --------------------------------------------------
-;; UI
-;; --------------------------------------------------
-
-(use-package minions
-  :custom
-  (mode-line-modes-delimiters nil)      ;; <- fixed typo
-  (minions-mode-line-lighter " …")
-  :config
-  (minions-mode 1))
-
-(use-package moody
-  :config
-  ;; Keep this minimal; don’t overwrite mode-line-format yet.
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
-
-(use-package nyan-mode
-  :after moody
-  :custom
-  (nyan-bar-length 10)
-  (nyan-wavy-trail t)
-  :config
-  (nyan-mode 1))
 
 (provide 'packages)

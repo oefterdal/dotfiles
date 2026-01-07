@@ -1,15 +1,20 @@
 (add-to-list 'load-path (expand-file-name "~/.config/emacs/config" user-emacs-directory))
 
-;; Load default settings first
 (require 'defaults)
 
-;; Load font configuration early (before packages that might depend on fonts)
 (require 'fonts)
-(my/setup-fonts)
+(add-hook 'after-init-hook #'my/setup-fonts)
 
-;; Load other modules
 (require 'packages)
-(require 'ui)
-(require 'backups)
+
+(cond
+ ((eq system-type 'darwin) (require 'mac))
+ ((eq system-type 'gnu/linux) (require 'linux)))
+
+(require 'ui)         ;; UI Configuration
+;;(require 'theme)
+
+;; Keybindings
 (require 'keys)
 
+(require 'backups)

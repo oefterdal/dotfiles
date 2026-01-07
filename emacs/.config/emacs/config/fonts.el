@@ -1,6 +1,5 @@
 ;;; -*- lexical-binding: t -*-
 ;; Font Configuration for Emacs
-;; This file handles all font-related settings
 
 (defgroup my-fonts nil
   "Font configuration."
@@ -12,7 +11,7 @@
   :group 'my-fonts)
 
 (defcustom my/variable-font "JetBrains Mono"
-  "Variable-pitch font family."
+  "Variable-pitch (proportional) font family."
   :type 'string
   :group 'my-fonts)
 
@@ -22,30 +21,23 @@
   :group 'my-fonts)
 
 (defun my/font-available-p (name)
+  "Return non-nil if font family NAME is available."
   (member name (font-family-list)))
 
 (defun my/setup-fonts ()
-  "Apply fonts to current and future frames."
+  "Apply fonts to current frame and set defaults for future frames."
   (interactive)
-  (let ((mono (if (my/font-available-p my/main-font) my/main-font "Menlo"))
-        (var  (if (my/font-available-p my/variable-font) my/variable-font "Menlo")))
+  (let* ((mono (if (my/font-available-p my/main-font) my/main-font "Menlo"))
+         (var  (if (my/font-available-p my/variable-font) my/variable-font "Menlo")))
 
-    ;; Default (monospace)
+    ;; Current frame faces
     (set-face-attribute 'default nil :family mono :height my/font-height)
+    (set-face-attribute 'variable-pitch nil :family var :height my/font-height)
 
-    ;; Variable pitch (Org, text modes, etc.)
-    (set-face-attribute 'variable-pitch nil :family var)
+    ;; Future frames (daemon / emacsclient)
+    (setf (alist-get 'font default-frame-alist)
+          (format "%s-%d" mono (/ my/font-height 10)))
 
-    ;; macOS rendering nicety
-    (when (eq system-type 'darwin)
-      (setq mac-allow-anti-aliasing t))
-
-    ;; Also apply to new frames (daemon / emacsclient)
-    (add-to-list 'default-frame-alist `(font . ,(format "%s-%d" mono (/ my/font-height 10)))))
-
-  (message "Fonts set: %s / %s" my/main-font my/variable-font))
-
-;; Call early if you want it immediately on startup:
-;; (my/setup-fonts)
+    (message "Fonts set: %s / %s" mono var)))
 
 (provide 'fonts)

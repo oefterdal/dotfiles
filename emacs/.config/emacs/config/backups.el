@@ -1,3 +1,4 @@
+;; Backups
 (defconst my/backup-dir
   (expand-file-name "backups/" user-emacs-directory))
 

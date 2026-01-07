@@ -32,7 +32,11 @@
    (line-number-mode 1)
    (column-number-mode 1)
    (global-display-line-numbers-mode 1)
+   (setq-default frame-title-format "")
 
+   ;; Macos Only
+   (set-frame-parameter nil 'ns-transparent-titlebar t)
+   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
    ;; Reuse same window for common buffers
    (add-to-list 'display-buffer-alist '("\\*Help\\*" . (display-buffer-same-window)))
    (add-to-list 'display-buffer-alist '("\\*grep\\*" . (display-buffer-same-window)))

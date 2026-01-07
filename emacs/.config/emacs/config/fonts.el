@@ -6,13 +6,13 @@
   "Font configuration."
   :group 'faces)
 
-(defcustom my/main-font "JetBrainsMono Nerd Font Mono"
+(defcustom my/main-font "JetBrains Mono"
   "Main (monospace) font family."
   :type 'string
   :group 'my-fonts)
 
-(defcustom my/variable-font "JetBrainsMono Nerd Font Propo"
-  "Variable-pitch (proportional) font family."
+(defcustom my/variable-font "JetBrains Mono"
+  "Variable-pitch font family."
   :type 'string
   :group 'my-fonts)
 

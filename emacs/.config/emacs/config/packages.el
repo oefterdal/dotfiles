@@ -78,6 +78,6 @@
 (require 'pkg-windmove)           ;;
 (require 'pkg-dired)              ;;
 (require 'pkg-yasnippet)          ;;
-
+(require 'pkg-jinx)               ;;
 
 (provide 'packages)

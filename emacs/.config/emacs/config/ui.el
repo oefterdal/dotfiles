@@ -5,6 +5,9 @@
       scroll-conservatively 101
       scroll-preserve-screen-position t)
 
+;; Tab always indent
+(setq tab-always-indent 'complete)
+
 (defun my/setup-display-optimization ()
   (when (boundp 'redisplay-dont-pause)
     (setq redisplay-dont-pause t))

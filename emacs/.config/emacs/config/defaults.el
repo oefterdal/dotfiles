@@ -1,38 +1,64 @@
-;; Startup Performance
-(setq inhibit-startup-message t)      		        ;; Skip startup message
-(setq inhibit-startup-echo-area-message t)  	    ;; Skip echo area messages
-(setq inhibit-splash-screen t)        		        ;; Skip splash screen
+;;; -*- lexical-binding: t; -*-
 
-;; Reduce unnecessary checks
-(when (boundp 'use-dialog-box)
-  (setq use-dialog-box nil))           		        ;; Use minibuffer instead of dialog boxes
-(when (boundp 'use-file-dialog)
-  (setq use-file-dialog nil))          		        ;; Use minibuffer for file operations
+;; Startup
+(setq inhibit-startup-message t
+      inhibit-startup-echo-area-message t
+      inhibit-splash-screen t)
 
-;; Auto-refresh files and directories (Dired, logs, etc.)
+(when (boundp 'use-dialog-box) (setq use-dialog-box nil))
+(when (boundp 'use-file-dialog) (setq use-file-dialog nil))
+
+(setq load-prefer-newer t
+      package-enable-at-startup nil)
+
+;; Auto-refresh
 (global-auto-revert-mode 1)
 (setq auto-revert-use-notify t)
 
-;; Savehist
-(setq history-length 1000)
-(setq savehist-autosave-interval 300)
+;; History
+(setq history-length 1000
+      savehist-autosave-interval 300)
 
-;; Show matching parens
+;; Parens
 (show-paren-mode 1)
 (setq show-paren-delay 0)
 
-;; Always follow symlinks
+;; Git/symlinks
 (setq vc-follow-symlinks t)
-(defun my/setup-startup-defaults ()
-  "Apply basic startup defaults."
-  (setq load-prefer-newer t)
-  (setq package-enable-at-startup nil))
 
-;; Buffers
-(setq display-buffer-alist
-      '((".*" display-buffer-same-window)))
+;; Start with blank scratch + open dired in ~/Developer
+(setq initial-scratch-message ""
+      initial-buffer-choice "~/Developer")
 
-;; Apply performance settings
-(my/setup-startup-defaults)
+;; TAB: indent, but if already indented, try completion
+(setq tab-always-indent 'complete)
+
+;; No tabs in files
+(setq-default indent-tabs-mode nil)
+
+(defun my/tab-dwim (&optional arg)
+  "Indent region/line; if nothing changed, try completion."
+  (interactive "P")
+  (cond
+   ((use-region-p)
+    (indent-region (region-beginning) (region-end)))
+
+   (t
+    (let ((before (buffer-substring-no-properties
+                   (line-beginning-position) (line-end-position))))
+      (indent-for-tab-command arg)
+      (let ((after (buffer-substring-no-properties
+                    (line-beginning-position) (line-end-position))))
+        (when (string= before after)
+          (completion-at-point)))))))
+
+;; Bind TAB everywhere (TAB == C-i)
+(global-set-key (kbd "TAB")   #'my/tab-dwim)
+(global-set-key (kbd "<tab>") #'my/tab-dwim)
+(global-set-key (kbd "C-i")   #'my/tab-dwim)
+
+;; Force completion explicitly (nice to have)
+(global-set-key (kbd "M-TAB") #'completion-at-point)
+(global-set-key (kbd "C-M-i") #'completion-at-point)
 
 (provide 'defaults)
